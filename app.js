@@ -32,30 +32,30 @@ MongoClient.connect(dbUri, function (error, client) {
     
         // encrypt the string using encryption algorithm, private secretKey and initialization vector
         const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-        let encryptedData = cipher.update(address, "utf-8", "hex");
-        encryptedData += cipher.final("hex");
+        let encryptedAddress = cipher.update(address, "utf-8", "hex");
+        encryptedAddress += cipher.final("hex");
     
         // convert the initialization vector to base64 string
         const base64data = Buffer.from(iv, 'binary').toString('base64');
         
         // save encrypted string along wtih initialization vector in database
-        await db.collection("strings").insertOne({
+        await db.collection("shippingDetails").insertOne({
             iv: base64data,
-            encryptedData: encryptedData
+            address: encryptedAddress
         });
     
         // show the encrypted address
-        result.send(encryptedData);
+        result.send(encryptedAddress);
     });
 
    // DECRYPT address
-   app.get("/decrypt/:encryptedDataValue", async function (request, result) {
+   app.get("/decrypt/:encryptedAddressValue", async function (request, result) {
     // get encrypted text from URL
-    const encrypted = request.params.encryptedDataValue;
+    const encrypted = request.params.encryptedAddressValue;
 
     // check if text exists in database
-    const obj = await db.collection("strings").findOne({
-        encryptedData: encrypted
+    const obj = await db.collection("shippingDetails").findOne({
+        address: encrypted
     });
 
     if (obj == null) {
@@ -68,7 +68,7 @@ MongoClient.connect(dbUri, function (error, client) {
 
     // decrypt the string using encryption algorithm and private secretKey
     const decipher = crypto.createDecipheriv(algorithm, secretKey, origionalData);
-    let decryptedData = decipher.update(obj.encryptedData, "hex", "utf-8");
+    let decryptedData = decipher.update(obj.address, "hex", "utf-8");
     decryptedData += decipher.final("utf8");
 
     // display the decrypted string
@@ -80,7 +80,7 @@ MongoClient.connect(dbUri, function (error, client) {
     // route to show all encrypted address
     app.get("/", async function (request, result) {
         // get all data from database
-        const data = await db.collection("strings")
+        const data = await db.collection("shippingDetails")
             .find({})
             .sort({
                 _id: -1
