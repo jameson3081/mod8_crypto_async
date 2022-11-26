@@ -19,21 +19,21 @@ MongoClient.connect(dbUri, function (error, client) {
  
     // set database
     db = client.db("testDbCrypto");
-    console.log("Database connected");
+    console.log("'testDbCrypto' Database connected");
  
     // ROUTES
     
-    //ENCRYPT PASSWORD
-    app.get("/encrypt/:password", async function (request, result) {
-        // get password from URL
-        const password = request.params.password;
+    //ENCRYPT address
+    app.get("/encrypt/:address", async function (request, result) {
+        // get address from URL
+        const address = request.params.address;
     
         // random 16 digit initialization vector
         const iv = crypto.randomBytes(16);
     
         // encrypt the string using encryption algorithm, private secretKey and initialization vector
         const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-        let encryptedData = cipher.update(password, "utf-8", "hex");
+        let encryptedData = cipher.update(address, "utf-8", "hex");
         encryptedData += cipher.final("hex");
     
         // convert the initialization vector to base64 string
@@ -45,11 +45,11 @@ MongoClient.connect(dbUri, function (error, client) {
             encryptedData: encryptedData
         });
     
-        // show the encrypted password
+        // show the encrypted address
         result.send(encryptedData);
     });
 
-   // DECRYPT PASSWORD
+   // DECRYPT address
    app.get("/decrypt/:encryptedDataValue", async function (request, result) {
     // get encrypted text from URL
     const encrypted = request.params.encryptedDataValue;
@@ -78,7 +78,7 @@ MongoClient.connect(dbUri, function (error, client) {
 
     
 
-    // route to show all encrypted passwords
+    // route to show all encrypted address
     app.get("/", async function (request, result) {
         // get all data from database
         const data = await db.collection("strings")
