@@ -1,0 +1,11 @@
+<table>
+    <% for (let d in data) { %>
+        <tr>
+            <td>
+                <a href="/decrypt/<%= data[d].encryptedData %>" target="_blank">
+                    <%= data[d].encryptedData %>
+                </a>
+            </td>
+        </tr>
+    <% } %>
+</table>
