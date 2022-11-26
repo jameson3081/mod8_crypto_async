@@ -2,9 +2,8 @@ const express = require('express')
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 const crypto = require('crypto')
-const algorithm = 'aes-256-cbc' //// set encryption algorithm. secret secretKey is used for both encryption and decryption
-const secretKey = "asfsafdsdsfdsafdsadsfdsfsdfsdsff" // // private secretKey, must be of 32 characters
-//const iv = crypto.randomBytes(16) // random 16 digit initialization vector
+const algorithm = 'aes-256-cbc' //// encryption algorithm. secret secretKey is used for both encryption and decryption
+const secretKey = "asfsafdsdsfdsafdsadsfdsfsdfsdsff" // // private secretKey
 
 const app = express()
 const dbUri = 'mongodb://localhost:27017/'
