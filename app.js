@@ -22,6 +22,21 @@ MongoClient.connect(dbUri, function (error, client) {
  
     // ROUTES
     
+    //HASH PASSWORD
+    app.get("/hash/:password",  (request, result) => {
+        const password = request.params.password;
+
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex')
+
+        db.collection("account").insertOne({
+            password: hashedPassword
+        });
+
+        result.send("HASHED PASSWORD:  " + hashedPassword)
+
+    });
+
+
     //ENCRYPT address
     app.get("/encrypt/:address", async function (request, result) {
         // get address from URL
@@ -45,7 +60,7 @@ MongoClient.connect(dbUri, function (error, client) {
         });
     
         // show the encrypted address
-        result.send(encryptedAddress);
+        result.send("ENCRYPTED ADDRESS:  " + encryptedAddress);
     });
 
    // DECRYPT address
@@ -72,7 +87,7 @@ MongoClient.connect(dbUri, function (error, client) {
     decryptedData += decipher.final("utf8");
 
     // display the decrypted string
-    result.send(decryptedData);
+    result.send("DECRYPTED ADDRESS:  " + decryptedData);
 });
 
     
@@ -91,7 +106,6 @@ MongoClient.connect(dbUri, function (error, client) {
             data: data
         });
     });
-
 
     app.listen(3000, function(err){
         if(err) throw error
