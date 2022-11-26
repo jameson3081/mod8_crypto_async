@@ -6,7 +6,7 @@ const algorithm = 'aes-256-cbc' //// encryption algorithm. secret secretKey is u
 const secretKey = "asfsafdsdsfdsafdsadsfdsfsdfsdsff" // // private secretKey
 
 const app = express()
-const dbUri = 'mongodb+srv://serverhost2:serverhosttest@cluster0.rngoxff.mongodb.net/?retryWrites=true&w=majority'
+const dbUri = 'mongodb+srv://serverhost2:<password>@cluster0.rngoxff.mongodb.net/?retryWrites=true&w=majority'
 app.set("view engine", "ejs");
 
 // connect with mongo DB server
